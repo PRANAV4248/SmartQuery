@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="Smart Query - Analytics & Database Explorer",
     page_icon=FAVICON_PATH,
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 try:
@@ -75,8 +75,63 @@ except Exception:
     pass
 
 
-st.sidebar.caption(f"Signed in as {AUTH_USER['email']}")
+# Sidebar intentionally hidden; authentication is handled by SmartQuery SSO.
 
+
+# Hide Streamlit's built-in sidebar, footer, and chrome.
+st.markdown("""
+<style>
+    /* Completely hide Streamlit's sidebar */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebarCollapsedControl"],
+    section[data-testid="stSidebar"],
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+    }
+
+    /* Hide "Built with Streamlit" footer and fullscreen controls */
+    footer,
+    [data-testid="stFooter"],
+    #MainMenu {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+    }
+
+    /* Hide Streamlit top chrome */
+    header[data-testid="stHeader"],
+    [data-testid="stDecoration"],
+    #stDecoration,
+    [data-testid="stToolbar"],
+    .stToolbar,
+    .stAppDeployButton,
+    button[kind="header"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+    }
+
+    /* Use the complete embedded width */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    .main {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .main .block-container,
+    [data-testid="stAppViewContainer"] > section:first-child,
+    section.main > div:first-child {
+        max-width: none !important;
+        width: 100% !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Hide Streamlit's built-in navbar/toolbar (Deploy button, hamburger menu, header bar)
 st.markdown("""
