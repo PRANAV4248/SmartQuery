@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Query — Enterprise Relational Analytics Suite{% endblock %}
+
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+    <main>
+        
+        <section class="hero">
+            <h1>Relational Data Analytics,<br><span class="accent">Powered by AI</span></h1>
+            <p>
+                Ask questions in plain English, explore interactive dashboards, and browse every table of the Chinook digital media database — all in one unified platform.
+            </p>
+            <div class="hero-actions">
+                <a href="/chat" class="btn-primary">🤖 Launch AI Agent</a>
+                <a href="/explorer" class="btn-secondary">📊 Open Analytics Explorer</a>
+            </div>
+        </section>
+
+        <div class="grid-features">
+            <div class="glass-card feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Conversational AI Agent</h3>
+                <p>
+                    Ask questions like <em>"Who is our top spending customer?"</em> or <em>"List AC/DC albums."</em> The agent writes, runs, and explains secure read-only SQL instantly.
+                </p>
+                <a href="/chat" class="feature-link">Open Chat Agent →</a>
+            </div>
+
+            <div class="glass-card feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Streamlit Data Visuals</h3>
+                <p>
+                    Explore KPIs, monthly revenue trends, global customer maps, and Power BI dashboard captures inside a native Streamlit interface.
+                </p>
+                <a href="/explorer" class="feature-link">Inspect Visuals →</a>
+            </div>
+
+            <div class="glass-card feature-card">
+                <div class="feature-icon">🗄️</div>
+                <h3>Database Table Browser</h3>
+                <p>
+                    Inspect all 11 tables of the Chinook schema. Filter rows, view full records, and download custom CSV exports with read-only database protection.
+                </p>
+                <a href="/explorer" class="feature-link">Explore Tables →</a>
+            </div>
+        </div>
+
+        <section class="mx-auto mb-20 w-full max-w-[1100px] px-6">
+            <div class="glass-card text-center">
+                <h2 class="mb-3 font-heading text-3xl font-bold tracking-tight text-zinc-50">
+                    🗄️ Supported <span class="text-blue-500">Relational Schema</span>
+                </h2>
+
+                <p class="mx-auto mb-8 max-w-3xl text-base leading-7 text-zinc-400">
+                    The Chinook database models a digital media store. Query across music catalog entities
+                    (Artists, Albums, Tracks), store operations (Customers, Employees), and sales transactions
+                    (Invoices, Invoice Lines) using plain English.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200">
+                        <span class="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></span>
+                        Artist &amp; Album
+                    </span>
+
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200">
+                        <span class="h-1.5 w-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_#a855f7]"></span>
+                        Track &amp; Playlist
+                    </span>
+
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200">
+                        <span class="h-1.5 w-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899]"></span>
+                        Genre &amp; MediaType
+                    </span>
+
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200">
+                        <span class="h-1.5 w-1.5 rounded-full bg-teal-500 shadow-[0_0_8px_#14b8a6]"></span>
+                        Customer &amp; Employee
+                    </span>
+
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-200">
+                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]"></span>
+                        Invoice &amp; InvoiceLine
+                    </span>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -1,3 +1,5 @@
+# This is a test file to build and run the agent in python terminal
+
 from dotenv import load_dotenv
 from langchain_community.utilities import SQLDatabase
 from dataclasses import dataclass
@@ -10,7 +12,7 @@ from langchain.agents.middleware import SummarizationMiddleware
 
 load_dotenv()
 
-db = SQLDatabase.from_uri("sqlite:///analysis/resources/Chinook.db")
+db = SQLDatabase.from_uri("sqlite:///../analysis/resources/Chinook.db")
 
 @dataclass
 class RuntimeContext:

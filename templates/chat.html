@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Query — AI Conversational Agent{% endblock %}
+
+{% block extra_head %}
+    <style>
+        body { height: 100vh; overflow: hidden; }
+    </style>
+{% endblock %}
+
+{% block orbs %}{% endblock %}
+
+{% block nav_chat %}active{% endblock %}
+
+{% block content %}
+    <main class="app-iframe-container">
+        <!-- Renders the mounted Chainlit interface at /agent -->
+        <iframe src="/agent" class="app-iframe" title="Chainlit Chat Interface"></iframe>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        const iframe = document.querySelector('.app-iframe');
+        function injectIframeOverrides() {
+            try {
+                const iframeDoc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+                if (iframeDoc && iframeDoc.head) {
+                    if (!iframeDoc.getElementById('sq-hide-inner-controls')) {
+                        const style = iframeDoc.createElement('style');
+                        style.id = 'sq-hide-inner-controls';
+                        style.textContent = `
+                            #theme-toggle, #user-nav-button,
+                            [data-testid="theme-toggle"], [data-testid="user-nav-button"],
+                            header .items-center.gap-1 > button,
+                            header button:has(svg.lucide-moon),
+                            header button:has(svg.lucide-sun),
+                            header button:has(.rounded-full) {
+                                display: none !important;
+                                visibility: hidden !important;
+                                opacity: 0 !important;
+                                pointer-events: none !important;
+                            }
+                        `;
+                        iframeDoc.head.appendChild(style);
+                    }
+                }
+            } catch (e) {}
+        }
+        if (iframe) {
+            iframe.addEventListener('load', injectIframeOverrides);
+            setInterval(injectIframeOverrides, 200);
+        }
+    </script>
+{% endblock %}

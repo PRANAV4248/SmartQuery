@@ -1,0 +1,23 @@
+#theme-toggle,
+#user-nav-button,
+[data-testid="theme-toggle"],
+[data-testid="user-nav-button"],
+[id*="theme-toggle"],
+[id*="user-nav"],
+header .items-center.gap-1 > button,
+header button:has(svg.lucide-moon),
+header button:has(svg.lucide-sun),
+header button:has(.rounded-full),
+header button:has(span[class*="bg-primary"]) {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+[data-sidebar="group-label"] {
+    display: none !important;
+}

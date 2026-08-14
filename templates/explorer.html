@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Query — Analytics &amp; Explorer{% endblock %}
+
+{% block extra_head %}
+    <style>
+        body { height: 100vh; overflow: hidden; }
+    </style>
+{% endblock %}
+
+{% block orbs %}{% endblock %}
+
+{% block nav_explorer %}active{% endblock %}
+
+{% block content %}
+    <main class="app-iframe-container">
+        <!-- Renders the mounted Streamlit sub-app (default port 8501) -->
+        <iframe src="http://localhost:8501" class="app-iframe" title="Streamlit Analytics &amp; Explorer"></iframe>
+    </main>
+{% endblock %}
+
+{% block footer %}{% endblock %}
