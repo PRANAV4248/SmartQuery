@@ -15,7 +15,7 @@
 {% block content %}
     <main class="app-iframe-container">
         <iframe
-            src="{{ streamlit_url }}/?sso_token={{ streamlit_sso_token | urlencode }}"
+            src="{{ streamlit_url }}/?embed=true&amp;sso_token={{ streamlit_sso_token | urlencode }}"
             class="app-iframe"
             title="Analytics &amp; Explorer"
             allow="clipboard-read; clipboard-write"

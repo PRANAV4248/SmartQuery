@@ -3,23 +3,46 @@ import sqlite3
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import os
+import streamlit as st
+
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
+
+FAVICON_PATH = os.path.join(PROJECT_ROOT, "public", "favicon.png")
 
 st.set_page_config(
     page_title="Smart Query - Analytics & Database Explorer",
-    page_icon="📊",
+    page_icon=FAVICON_PATH,
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ---------------------------------------------------------------------------
-# Authentication: Streamlit is deployed separately, so it cannot see the
-# FastAPI session cookie directly. Validate the short-lived signed SSO token
-# issued by the main SmartQuery app before exposing any dashboard content.
-# ---------------------------------------------------------------------------
-import time
-from jose import jwt, JWTError
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
 
-STREAMLIT_AUTH_SECRET = os.getenv("CHAINLIT_AUTH_SECRET")
+FAVICON_PATH = os.path.join(PROJECT_ROOT, "public", "favicon.png")
+
+st.set_page_config(
+    page_title="Smart Query - Analytics & Database Explorer",
+    page_icon=FAVICON_PATH,
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+try:
+    STREAMLIT_AUTH_SECRET = st.secrets.get("CHAINLIT_AUTH_SECRET")
+except Exception:
+    STREAMLIT_AUTH_SECRET = None
+if not STREAMLIT_AUTH_SECRET:
+    STREAMLIT_AUTH_SECRET = os.getenv("CHAINLIT_AUTH_SECRET")
+
+try:
+    MAIN_APP_URL = st.secrets.get("MAIN_APP_URL")
+except Exception:
+    MAIN_APP_URL = None
+if not MAIN_APP_URL:
+    MAIN_APP_URL = os.getenv("MAIN_APP_URL", "https://smartquery-22ix.onrender.com")
 
 
 def _get_sso_token():
@@ -54,7 +77,7 @@ AUTH_USER = _authenticate_streamlit()
 if not AUTH_USER:
     st.title("🔐 Smart Query")
     st.warning("Please sign in through the Smart Query website to access Analytics & Explorer.")
-    st.link_button("Sign in to Smart Query", os.getenv("MAIN_APP_URL", "https://smartquery-22ix.onrender.com") + "/login?next=/explorer")
+    st.link_button("Sign in to Smart Query", MAIN_APP_URL.rstrip("/") + "/login?next=/explorer")
     st.stop()
 
 # Remove the token from the browser URL after successful validation.
