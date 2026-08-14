@@ -2,25 +2,13 @@ import os
 import sqlite3
 import pandas as pd
 import streamlit as st
+from jose import jwt, JWTError
 import plotly.express as px
-import os
-import streamlit as st
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
-
-FAVICON_PATH = os.path.join(PROJECT_ROOT, "public", "favicon.png")
-
-st.set_page_config(
-    page_title="Smart Query - Analytics & Database Explorer",
-    page_icon=FAVICON_PATH,
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
-
+DB_PATH = os.path.join(PROJECT_ROOT, "analysis", "resources", "Chinook.db")
+DASHBOARD_DIR = os.path.join(PROJECT_ROOT, "analysis", "dashboards")
 FAVICON_PATH = os.path.join(PROJECT_ROOT, "public", "favicon.png")
 
 st.set_page_config(
@@ -206,17 +194,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# Project paths
-# ---------------------------------------------------------------------------
-# Do NOT build paths from the current working directory.
-# Streamlit Cloud may start the app from a different working directory.
-# Resolve everything relative to this Python file instead.
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
 
-DB_PATH = os.path.join(PROJECT_ROOT, "analysis", "resources", "Chinook.db")
-DASHBOARD_DIR = os.path.join(PROJECT_ROOT, "analysis", "dashboards")
 
 
 def get_db_connection():
