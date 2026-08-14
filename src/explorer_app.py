@@ -60,7 +60,10 @@ def _authenticate_streamlit():
         return None
 
 
-AUTH_USER = _authenticate_streamlit()
+if "smartquery_auth_user" not in st.session_state:
+    st.session_state.smartquery_auth_user = _authenticate_streamlit()
+
+AUTH_USER = st.session_state.smartquery_auth_user
 
 if not AUTH_USER:
     st.title("🔐 Smart Query")
@@ -422,7 +425,8 @@ with tab_dashboard:
             data=pbix_bytes,
             file_name="Chinook Dashboard.pbix",
             mime="application/octet-stream",
-            help="Click here to download the full interactive Power BI report to open in Power BI Desktop."
+            help="Click here to download the full interactive Power BI report to open in Power BI Desktop.",
+            on_click="ignore"
         )
     else:
         st.warning("Power BI file 'Chinook Dashboard.pbix' not found.")
@@ -493,5 +497,6 @@ with tab_explorer:
             label=f"📥 Export {selected_table} Table to CSV",
             data=csv_data,
             file_name=f"Chinook_{selected_table}.csv",
-            mime="text/csv"
+            mime="text/csv",
+            on_click="ignore"
         )
