@@ -130,7 +130,7 @@ st.markdown("""
     section.main > div:first-child {
         max-width: none !important;
         width: 100% !important;
-        padding-top: 44px !important;
+        padding-top: 0 !important;
         padding-bottom: 120px !important;
         margin-top: 0 !important;
     }
@@ -162,7 +162,9 @@ st.markdown("""
     [data-testid="stMain"],
     section.main > div:first-child,
     .stMainBlockContainer,
-    div[data-testid="stVerticalBlock"] {
+    div[data-testid="stAppViewBlockContainer"],
+    div[data-testid="stVerticalBlock"],
+    div[data-testid="stVerticalBlockBorderWrapper"]:first-of-type {
         padding-top: 0rem !important;
         margin-top: 0rem !important;
     }
@@ -171,14 +173,16 @@ st.markdown("""
        are never hidden by the embedded viewport/footer area. */
     .main .block-container,
     [data-testid="stAppViewContainer"] .block-container,
+    div[data-testid="stAppViewBlockContainer"],
     .stMainBlockContainer {
-        padding-top: 0 !important;
+        padding-top: 1rem !important;
         padding-bottom: 120px !important;
     }
 
     /* Reduce the large gap between the SmartQuery navbar and the dashboard title */
-    .main .block-container h1:first-of-type {
-        margin-top: 0.25rem !important;
+    .main .block-container h1:first-of-type,
+    div[data-testid="stAppViewBlockContainer"] h1:first-of-type {
+        margin-top: 0 !important;
         padding-top: 0 !important;
     }
 </style>
