@@ -155,6 +155,17 @@ st.markdown("""
         min-height: 0 !important;
         overflow: hidden !important;
     }
+    /* Kill the flex/grid GAP Streamlit reserves between the (hidden) header
+       and the main content — collapsing the header's height alone doesn't
+       remove this, since the gap is a property of the parent flex container. */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stApp"],
+    .stApp,
+    [data-testid="stMain"] {
+        gap: 0 !important;
+        row-gap: 0 !important;
+    }
+
     /* Remove ALL top padding/margin Streamlit reserves for the hidden header */
     .main .block-container,
     [data-testid="stAppViewContainer"] > section:first-child,

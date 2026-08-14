@@ -37,11 +37,12 @@
     .app-iframe {
         position: absolute !important;
 
-        top: 0 !important;
+        top: -110px !important; /* TOP_CROP */
         left: -8px !important;
 
         width: calc(100% + 16px) !important;
-        height: calc(100% + 72px) !important;
+        /* height = 100% + BOTTOM_BUFFER(160px) + TOP_CROP(110px) */
+        height: calc(100% + 160px + 110px) !important;
 
         margin: 0 !important;
         padding: 0 !important;
