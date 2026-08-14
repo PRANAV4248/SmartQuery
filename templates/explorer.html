@@ -3,20 +3,23 @@
 {% block title %}Smart Query — Analytics &amp; Explorer{% endblock %}
 
 {% block extra_head %}
+<script src="https://cdn.tailwindcss.com"></script>
+
 <style>
-    html, body {
+    html,
+    body {
         height: 100%;
         margin: 0;
         overflow: hidden;
     }
 
-    /* The Streamlit app should sit directly beneath the SmartQuery navbar. */
     .app-iframe-container {
         position: fixed !important;
         top: 60px !important;
-        left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
+        left: 0 !important;
+
         width: 100vw !important;
         height: calc(100vh - 60px) !important;
 
@@ -27,26 +30,30 @@
         border-radius: 0 !important;
         box-shadow: none !important;
         background: #0f1115 !important;
-
         overflow: hidden !important;
+        clip-path: inset(0) !important;
     }
 
     .app-iframe {
-        display: block !important;
         position: absolute !important;
-        inset: 0 !important;
 
-        width: 100% !important;
-        height: 100% !important;
+        top: 0 !important;
+        left: -8px !important;
+
+        width: calc(100% + 16px) !important;
+        height: calc(100% + 72px) !important;
 
         margin: 0 !important;
         padding: 0 !important;
 
+        display: block !important;
+
         border: 0 !important;
-        outline: 0 !important;
+        outline: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         background: #0f1115 !important;
+        appearance: none !important;
     }
 </style>
 {% endblock %}
@@ -56,14 +63,70 @@
 {% block nav_explorer %}active{% endblock %}
 
 {% block content %}
-    <main class="app-iframe-container">
-        <iframe
-            src="{{ streamlit_url.rstrip('/') }}/?embed=true&amp;sso_token={{ streamlit_sso_token | urlencode }}"
-            class="app-iframe"
-            title="Analytics &amp; Explorer"
-            allow="clipboard-read; clipboard-write"
-        ></iframe>
-    </main>
+
+<main
+    class="
+        app-iframe-container
+        relative
+        isolate
+        overflow-hidden
+        bg-[#0f1115]
+    "
+>
+
+    <iframe
+        src="{{ streamlit_url.rstrip('/') }}/?embed=true&amp;embedded=true&amp;sso_token={{ streamlit_sso_token | urlencode }}"
+        class="app-iframe"
+        title="SmartQuery Analytics &amp; Data Explorer"
+        frameborder="0"
+        scrolling="no"
+        allow="fullscreen"
+    ></iframe>
+
+    <!-- Left edge -->
+    <div
+        class="
+            pointer-events-none
+            absolute
+            inset-y-0
+            left-0
+            z-20
+            w-2
+            bg-[#0f1115]
+        "
+        aria-hidden="true"
+    ></div>
+
+    <!-- Right edge -->
+    <div
+        class="
+            pointer-events-none
+            absolute
+            inset-y-0
+            right-0
+            z-20
+            w-2
+            bg-[#0f1115]
+        "
+        aria-hidden="true"
+    ></div>
+
+    <!-- Bottom Streamlit footer -->
+    <div
+        class="
+            pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            z-20
+            h-11
+            bg-[#0f1115]
+        "
+        aria-hidden="true"
+    ></div>
+
+</main>
+
 {% endblock %}
 
 {% block footer %}{% endblock %}
