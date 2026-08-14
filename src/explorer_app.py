@@ -11,6 +11,62 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# ---------------------------------------------------------------------------
+# Authentication: Streamlit is deployed separately, so it cannot see the
+# FastAPI session cookie directly. Validate the short-lived signed SSO token
+# issued by the main SmartQuery app before exposing any dashboard content.
+# ---------------------------------------------------------------------------
+import time
+from jose import jwt, JWTError
+
+STREAMLIT_AUTH_SECRET = os.getenv("CHAINLIT_AUTH_SECRET")
+
+
+def _get_sso_token():
+    try:
+        return st.query_params.get("sso_token")
+    except Exception:
+        return None
+
+
+def _authenticate_streamlit():
+    token = _get_sso_token()
+    if not token or not STREAMLIT_AUTH_SECRET:
+        return None
+
+    try:
+        payload = jwt.decode(token, STREAMLIT_AUTH_SECRET, algorithms=["HS256"])
+        if payload.get("purpose") != "streamlit_sso":
+            return None
+        if not payload.get("sub") or not payload.get("email"):
+            return None
+        return {
+            "id": payload["sub"],
+            "email": payload["email"],
+            "name": payload.get("name") or payload["email"],
+        }
+    except JWTError:
+        return None
+
+
+AUTH_USER = _authenticate_streamlit()
+
+if not AUTH_USER:
+    st.title("🔐 Smart Query")
+    st.warning("Please sign in through the Smart Query website to access Analytics & Explorer.")
+    st.link_button("Sign in to Smart Query", os.getenv("MAIN_APP_URL", "https://smartquery-22ix.onrender.com") + "/login?next=/explorer")
+    st.stop()
+
+# Remove the token from the browser URL after successful validation.
+try:
+    st.query_params.clear()
+except Exception:
+    pass
+
+
+st.sidebar.caption(f"Signed in as {AUTH_USER['email']}")
+
+
 # Hide Streamlit's built-in navbar/toolbar (Deploy button, hamburger menu, header bar)
 st.markdown("""
 <style>
@@ -127,10 +183,27 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Database path
-DB_PATH = os.path.abspath("analysis/resources/Chinook.db")
+# ---------------------------------------------------------------------------
+# Project paths
+# ---------------------------------------------------------------------------
+# Do NOT build paths from the current working directory.
+# Streamlit Cloud may start the app from a different working directory.
+# Resolve everything relative to this Python file instead.
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, ".."))
+
+DB_PATH = os.path.join(PROJECT_ROOT, "analysis", "resources", "Chinook.db")
+DASHBOARD_DIR = os.path.join(PROJECT_ROOT, "analysis", "dashboards")
+
 
 def get_db_connection():
+    """Open the Chinook SQLite database using an absolute project path."""
+    if not os.path.isfile(DB_PATH):
+        raise FileNotFoundError(
+            f"Chinook database not found at: {DB_PATH}. "
+            "Make sure analysis/resources/Chinook.db is included in the repository."
+        )
+
     return sqlite3.connect(DB_PATH)
 
 # Retrieve tables
@@ -268,7 +341,7 @@ with tab_dashboard:
     st.markdown("Below are interactive visual pages designed using Power BI Desktop. Since personal accounts are blocked from publishing online, you can inspect each dashboard preview page and download the complete `.pbix` desktop package below.")
 
     # PBIX Download Button
-    pbix_path = "analysis/dashboards/Chinook Dashboard.pbix"
+    pbix_path = os.path.join(DASHBOARD_DIR, "Chinook Dashboard.pbix")
     if os.path.exists(pbix_path):
         with open(pbix_path, "rb") as f:
             pbix_bytes = f.read()
@@ -288,15 +361,15 @@ with tab_dashboard:
     grid_col1, grid_col2 = st.columns(2)
     with grid_col1:
         st.subheader("🏠 Page 1: Overview Dashboard")
-        st.image("analysis/dashboards/Overview.png", caption="Headline KPIs, Customer Totals, and Billing Distribution Map", use_container_width=True)
+        st.image(os.path.join(DASHBOARD_DIR, "Overview.png"), caption="Headline KPIs, Customer Totals, and Billing Distribution Map", use_container_width=True)
         st.subheader("🙋 Page 2: Customer Insights")
-        st.image("analysis/dashboards/Customer insights.png", caption="Top Customer spend dynamics, Average Purchase value, and Yearly trends", use_container_width=True)
+        st.image(os.path.join(DASHBOARD_DIR, "Customer insights.png"), caption="Top Customer spend dynamics, Average Purchase value, and Yearly trends", use_container_width=True)
         
     with grid_col2:
         st.subheader("💰 Page 3: Sales Analysis")
-        st.image("analysis/dashboards/Sales analysis.png", caption="Genre sales breakdown, Employee sales quotas, and Monthly revenue cycles", use_container_width=True)
+        st.image(os.path.join(DASHBOARD_DIR, "Sales analysis.png"), caption="Genre sales breakdown, Employee sales quotas, and Monthly revenue cycles", use_container_width=True)
         st.subheader("🌍 Page 4: Country Analysis")
-        st.image("analysis/dashboards/Country analysis.png", caption="Country-by-country sales performance metrics and Genre country splits", use_container_width=True)
+        st.image(os.path.join(DASHBOARD_DIR, "Country analysis.png"), caption="Country-by-country sales performance metrics and Genre country splits", use_container_width=True)
 
 
 # ----------------- TAB 2: DATABASE CSV TABLE EXPLORER -----------------
@@ -350,4 +423,3 @@ with tab_explorer:
             file_name=f"Chinook_{selected_table}.csv",
             mime="text/csv"
         )
-

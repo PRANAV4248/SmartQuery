@@ -1,7 +1,6 @@
 import os
 import sys
 import signal
-import threading
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
@@ -15,7 +14,6 @@ from sqlalchemy.orm import Session
 from chainlit.utils import mount_chainlit
 from chainlit.auth import create_jwt, set_auth_cookie, clear_auth_cookie
 from chainlit.user import User as ChainlitUser
-from streamlit.web import cli as stcli
 import uvicorn
 
 os.environ.setdefault("CHAINLIT_CUSTOM_AUTH", "true")
@@ -62,6 +60,7 @@ try:
         get_google_auth_url,
         verify_google_code,
         generate_api_key,
+        create_streamlit_sso_token,
     )
 except ImportError:
     from database import init_db, SessionLocal, DBUser, get_db
@@ -72,25 +71,12 @@ except ImportError:
         get_google_auth_url,
         verify_google_code,
         generate_api_key,
+        create_streamlit_sso_token,
     )
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-
-    def run_streamlit():
-        sys.argv = [
-            "streamlit", "run", "src/explorer_app.py",
-            "--server.port", "8501",
-            "--server.headless", "true",
-            "--server.address", "127.0.0.1",
-            "--browser.gatherUsageStats", "false"
-        ]
-        stcli.main()
-
-    streamlit_thread = threading.Thread(target=run_streamlit, daemon=True)
-    streamlit_thread.start()
-    print("Streamlit Analytics & Explorer daemon started on port 8501.")
 
     yield
 
@@ -133,11 +119,30 @@ async def chat_page(request: Request):
 
 @app.get("/explorer", response_class=HTMLResponse)
 async def explorer_page(request: Request):
-    """Serve Streamlit page (FastAPI auth guard wrapper)."""
+    """Render the authenticated Streamlit wrapper with a short-lived SSO token."""
     user = get_session_user(request)
     if not user:
         return RedirectResponse(url="/login?next=/explorer")
-    return templates.TemplateResponse("explorer.html", {"request": request, "user": user})
+
+    streamlit_url = os.getenv("STREAMLIT_APP_URL")
+    if not streamlit_url:
+        return HTMLResponse(
+            "Streamlit is not configured. Set STREAMLIT_APP_URL in the Render environment.",
+            status_code=503,
+        )
+
+    streamlit_url = streamlit_url.rstrip("/")
+    sso_token = create_streamlit_sso_token(user, expires_minutes=5)
+
+    return templates.TemplateResponse(
+        "explorer.html",
+        {
+            "request": request,
+            "user": user,
+            "streamlit_url": streamlit_url,
+            "streamlit_sso_token": sso_token,
+        },
+    )
 
 
 @app.get("/auth/google/login")

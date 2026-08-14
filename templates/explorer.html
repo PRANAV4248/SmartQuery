@@ -14,8 +14,12 @@
 
 {% block content %}
     <main class="app-iframe-container">
-        <!-- Renders the mounted Streamlit sub-app (default port 8501) -->
-        <iframe src="http://localhost:8501" class="app-iframe" title="Streamlit Analytics &amp; Explorer"></iframe>
+        <iframe
+            src="{{ streamlit_url }}/?sso_token={{ streamlit_sso_token | urlencode }}"
+            class="app-iframe"
+            title="Analytics &amp; Explorer"
+            allow="clipboard-read; clipboard-write"
+        ></iframe>
     </main>
 {% endblock %}
 

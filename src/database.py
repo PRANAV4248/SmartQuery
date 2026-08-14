@@ -2,6 +2,8 @@ import os
 import uuid
 
 from dotenv import load_dotenv
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from sqlalchemy import (
     create_engine,
     event,
@@ -18,11 +20,12 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB, ARRAY as PG_A
 from sqlalchemy.types import TypeDecorator, CHAR, JSON
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
-load_dotenv()
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
 db_url = os.getenv("DATABASE_URL")
 if not db_url:
-    db_url = "sqlite:///chat_history.db"
+    LOCAL_SQLITE_PATH = os.path.join(PROJECT_ROOT, "chat_history.db")
+    db_url = "sqlite:///" + LOCAL_SQLITE_PATH.replace(os.sep, "/")
 elif db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
@@ -211,7 +214,7 @@ def get_async_db_url() -> str:
     """Return the async SQLAlchemy connection string (asyncpg / aiosqlite)."""
     raw_url = os.getenv("DATABASE_URL")
     if not raw_url:
-        return "sqlite+aiosqlite:///chat_history.db"
+        return "sqlite+aiosqlite:///" + os.path.join(PROJECT_ROOT, "chat_history.db").replace(os.sep, "/")
     if raw_url.startswith("postgres://"):
         return raw_url.replace("postgres://", "postgresql+asyncpg://", 1)
     if raw_url.startswith("postgresql://"):

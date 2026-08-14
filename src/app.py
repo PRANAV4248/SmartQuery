@@ -14,13 +14,22 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import HumanMessage, AIMessage
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 from psycopg.rows import dict_row
 
 @cl.data_layer
 def get_data_layer():
     return SQLAlchemyDataLayer(conninfo=get_async_db_url())
 
-db = SQLDatabase.from_uri("sqlite:///analysis/resources/Chinook.db")
+DB_PATH = os.path.join(PROJECT_ROOT, "analysis", "resources", "Chinook.db")
+if not os.path.isfile(DB_PATH):
+    raise FileNotFoundError(
+        f"Chinook database not found at: {DB_PATH}. "
+        "Make sure analysis/resources/Chinook.db is included in the repository."
+    )
+
+db = SQLDatabase.from_uri(f"sqlite:///{DB_PATH.replace(os.sep, "/")}")
 
 @dataclass
 class RuntimeContext:

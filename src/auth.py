@@ -102,3 +102,34 @@ def verify_google_code(code: str) -> dict | None:
         "email": profile.get("email"),
         "name": profile.get("name", profile.get("email")),
     }
+
+def create_streamlit_sso_token(user: dict, expires_minutes: int = 5) -> str:
+    """Create a short-lived signed token for the separately deployed Streamlit app."""
+    expire = datetime.utcnow() + timedelta(minutes=expires_minutes)
+    payload = {
+        "sub": user["id"],
+        "email": user["email"],
+        "name": user.get("name") or user.get("email"),
+        "purpose": "streamlit_sso",
+        "exp": expire,
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def verify_streamlit_sso_token(token: str) -> dict | None:
+    """Verify a short-lived Streamlit SSO token issued by the main app."""
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("purpose") != "streamlit_sso":
+            return None
+        if not payload.get("sub") or not payload.get("email"):
+            return None
+        return {
+            "id": payload["sub"],
+            "email": payload["email"],
+            "name": payload.get("name") or payload["email"],
+        }
+    except JWTError:
+        return None
