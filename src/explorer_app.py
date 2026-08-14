@@ -127,7 +127,8 @@ st.markdown("""
     section.main > div:first-child {
         max-width: none !important;
         width: 100% !important;
-        padding-top: 0 !important;
+        padding-top: 44px !important;
+        padding-bottom: 120px !important;
         margin-top: 0 !important;
     }
 </style>
@@ -161,6 +162,21 @@ st.markdown("""
     div[data-testid="stVerticalBlock"] {
         padding-top: 0rem !important;
         margin-top: 0rem !important;
+    }
+
+    /* Extra bottom breathing room so the final dashboard charts
+       are never hidden by the embedded viewport/footer area. */
+    .main .block-container,
+    [data-testid="stAppViewContainer"] .block-container,
+    .stMainBlockContainer {
+        padding-top: 0 !important;
+        padding-bottom: 120px !important;
+    }
+
+    /* Reduce the large gap between the SmartQuery navbar and the dashboard title */
+    .main .block-container h1:first-of-type {
+        margin-top: 0.25rem !important;
+        padding-top: 0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
