@@ -515,3 +515,5 @@ with tab_explorer:
             mime="text/csv",
             on_click="ignore"
         )
+
+        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)

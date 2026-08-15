@@ -37,12 +37,12 @@
     .app-iframe {
         position: absolute !important;
 
-        top: -110px !important; /* TOP_CROP */
+        top: -85px !important; /* TOP_CROP */
         left: -8px !important;
 
         width: calc(100% + 16px) !important;
-        /* height = 100% + BOTTOM_BUFFER(160px) + TOP_CROP(110px) */
-        height: calc(100% + 160px + 110px) !important;
+        /* height = 100% + BOTTOM_BUFFER(160px) + TOP_CROP(85px) */
+        height: calc(100% + 125px + 85px) !important;
 
         margin: 0 !important;
         padding: 0 !important;
@@ -83,48 +83,6 @@
         scrolling="no"
         allow="fullscreen"
     ></iframe>
-
-    <!-- Left edge -->
-    <div
-        class="
-            pointer-events-none
-            absolute
-            inset-y-0
-            left-0
-            z-20
-            w-2
-            bg-[#0f1115]
-        "
-        aria-hidden="true"
-    ></div>
-
-    <!-- Right edge -->
-    <div
-        class="
-            pointer-events-none
-            absolute
-            inset-y-0
-            right-0
-            z-20
-            w-2
-            bg-[#0f1115]
-        "
-        aria-hidden="true"
-    ></div>
-
-    <!-- Bottom Streamlit footer -->
-    <div
-        class="
-            pointer-events-none
-            absolute
-            inset-x-0
-            bottom-0
-            z-20
-            h-11
-            bg-[#0f1115]
-        "
-        aria-hidden="true"
-    ></div>
 
 </main>
 
