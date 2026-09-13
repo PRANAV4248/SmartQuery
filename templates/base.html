@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Query{% endblock %}</title>
+    <meta name="description" content="{% block description %}Ask your database in plain English. Chainlit AI agent, interactive dashboards, and full SQL table explorer powered by Supabase PostgreSQL.{% endblock %}">
+    <link rel="icon" href="/static/favicon.png">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false
+            }
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block orbs %}
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    {% endblock %}
+
+    <header class="overflow-visible">
+        <div class="nav-container !flex !w-full !max-w-none !mx-0 !items-center !justify-between !gap-4 !px-0">
+            <a href="/" class="logo-link !ml-0 !mr-auto shrink-0">
+                <img src="/static/logo_nav.png" alt="Smart Query logo" class="max-w-[190px] sm:max-w-none">
+            </a>
+
+            <nav class="hidden md:block">
+                <ul class="flex items-center gap-1 lg:gap-2">
+                    <li><a href="/" class="{% block nav_home %}{% endblock %}">Home</a></li>
+                    <li><a href="/chat" class="{% block nav_chat %}{% endblock %}">AI Agent</a></li>
+                    <li><a href="/explorer" class="{% block nav_explorer %}{% endblock %}">Analytics &amp; Explorer</a></li>
+
+                    {% if user %}
+                        <li class="relative">
+                            <details class="group">
+                                <summary class="flex cursor-pointer list-none items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">
+                                    <span class="max-w-[140px] truncate">{{ user.name or user.email }}</span>
+                                    <svg class="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 1 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1-.02-1.06Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </summary>
+
+                                <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-white/10 bg-zinc-900 p-2 shadow-2xl shadow-black/40">
+                                    <div class="border-b border-white/10 px-3 py-2">
+                                        <p class="text-xs text-zinc-500">Signed in as</p>
+                                        <p class="mt-1 truncate text-sm text-zinc-200">{{ user.email }}</p>
+                                    </div>
+                                    <a href="/auth/logout" class="mt-1 block rounded-lg px-3 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                                        Logout
+                                    </a>
+                                </div>
+                            </details>
+                        </li>
+                    {% else %}
+                        <li><a href="/login" class="nav-btn" style="background: var(--primary);">Sign In</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <details class="relative !ml-auto md:hidden !mr-0">
+                <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-zinc-300 transition hover:bg-white/[0.08] hover:text-white">
+                    <span class="sr-only">Open navigation menu</span>
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <path d="M4 6h16"/>
+                        <path d="M4 12h16"/>
+                        <path d="M4 18h16"/>
+                    </svg>
+                </summary>
+
+                <div class="absolute right-0 top-full z-50 mt-3 w-[min(90vw,280px)] rounded-xl border border-white/10 bg-zinc-950 p-2 shadow-2xl shadow-black/50">
+                    <a href="/" class="{% block mobile_nav_home %}{% endblock %} block rounded-lg px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                        Home
+                    </a>
+                    <a href="/chat" class="{% block mobile_nav_chat %}{% endblock %} block rounded-lg px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                        AI Agent
+                    </a>
+                    <a href="/explorer" class="{% block mobile_nav_explorer %}{% endblock %} block rounded-lg px-4 py-3 text-sm font-medium text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                        Analytics &amp; Explorer
+                    </a>
+
+                    {% if user %}
+                        <div class="my-2 border-t border-white/10"></div>
+                        <div class="px-4 py-2">
+                            <p class="text-xs text-zinc-500">Signed in as</p>
+                            <p class="mt-1 truncate text-sm text-zinc-200">{{ user.name or user.email }}</p>
+                        </div>
+                        <a href="/auth/logout" class="block rounded-lg px-4 py-3 text-sm font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                            Logout
+                        </a>
+                    {% else %}
+                        <div class="my-2 border-t border-white/10"></div>
+                        <a href="/login" class="block rounded-lg px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90" style="background: var(--primary);">
+                            Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </details>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    <footer>
+        <p>Created with 💝 by <a href="https://github.com/PRANAV4248" target="_blank">Pranav Choubey</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/pranavchoubey89/" target="_blank">LinkedIn</a></p>
+    </footer>
+    {% endblock %}
+</body>
+</html>

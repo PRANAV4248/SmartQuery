@@ -1,0 +1,162 @@
+/* ── Hide Streamlit chrome ─────────────────────────────────────── */
+
+/* Sidebar */
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapsedControl"],
+section[data-testid="stSidebar"],
+[data-testid="stSidebarNav"] {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+}
+
+/* Footer & main menu */
+footer,
+[data-testid="stFooter"],
+#MainMenu {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+}
+
+/* Header / toolbar / deploy button */
+header[data-testid="stHeader"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+#stDecoration,
+.stToolbar,
+.stAppDeployButton,
+button[kind="header"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* ── Layout reset ──────────────────────────────────────────────── */
+
+/* Remove flex/grid gap the hidden header leaves behind */
+[data-testid="stAppViewContainer"],
+[data-testid="stApp"],
+.stApp,
+[data-testid="stMain"] {
+    gap: 0 !important;
+    row-gap: 0 !important;
+}
+
+/* Full-width, flush-left layout */
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+.main {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Zero out top spacing on every Streamlit inner wrapper */
+.main .block-container,
+[data-testid="stAppViewContainer"] > section:first-child,
+section.main > div:first-child,
+.stMainBlockContainer,
+div[data-testid="stAppViewBlockContainer"],
+div[data-testid="stVerticalBlock"],
+div[data-testid="stVerticalBlockBorderWrapper"]:first-of-type {
+    max-width: none !important;
+    width: 100% !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Content block: small top pad + generous bottom breathing room
+   so charts are never clipped by the embedded viewport edge. */
+.main .block-container,
+[data-testid="stAppViewContainer"] .block-container,
+div[data-testid="stAppViewBlockContainer"],
+.stMainBlockContainer {
+    padding-top: 1rem !important;
+    padding-bottom: 120px !important;
+}
+
+/* Collapse gap above the page title */
+.main .block-container h1:first-of-type,
+div[data-testid="stAppViewBlockContainer"] h1:first-of-type {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* ── Metric cards (dark theme) ─────────────────────────────────── */
+
+.metric-card {
+    background-color: #171c24;
+    border: 1px solid #232c3d;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.metric-card h3 {
+    margin: 0;
+    color: #8c9ba5;
+    font-size: 14px;
+    font-weight: 500;
+}
+.metric-card p {
+    margin: 5px 0 0;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* ── Tab bar ────────────────────────────────────────────────────── */
+
+/* Tab row */
+[data-testid="stTabs"] > div:first-child [role="tablist"] {
+    display: flex !important;
+    width: 100% !important;
+    gap: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Individual tab (equal-width, centered) */
+[data-testid="stTabs"] > div:first-child [role="tab"] {
+    flex: 1 1 50% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 2.5rem !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+    letter-spacing: 0.01em !important;
+    border-radius: 0 !important;
+    transition: color 0.2s, background 0.2s !important;
+}
+
+/* Active tab */
+[data-testid="stTabs"] > div:first-child [role="tab"][aria-selected="true"] {
+    color: #fff !important;
+    border-bottom: 3px solid #0882ff !important;
+    background: transparent !important;
+}
+
+/* Inactive tab */
+[data-testid="stTabs"] > div:first-child [role="tab"][aria-selected="false"] {
+    color: #888 !important;
+    border-bottom: 3px solid transparent !important;
+}
+
+/* Hover */
+[data-testid="stTabs"] > div:first-child [role="tab"]:hover {
+    color: #ddd !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Suppress Streamlit's default active-tab indicator */
+[data-testid="stTabs"] > div:first-child [role="tab"][aria-selected="true"]::before,
+[data-testid="stTabs"] > div:first-child [role="tab"][aria-selected="true"]::after,
+[data-testid="stTabsDivider"],
+[data-baseweb="tab-highlight"] {
+    display: none !important;
+    background: transparent !important;
+    border: none !important;
+}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Query — Analytics &amp; Explorer{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .app-iframe-container {
+        position: fixed !important;
+        top: 60px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+
+        width: 100vw !important;
+        height: calc(100vh - 60px) !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: #0f1115 !important;
+        overflow: hidden !important;
+        clip-path: inset(0) !important;
+    }
+
+    .app-iframe {
+        position: absolute !important;
+
+        top: -45px !important; /* TOP_CROP */
+        left: -8px !important;
+
+        width: calc(100% + 16px) !important;
+        /* height = 100% + BOTTOM_BUFFER(160px) + TOP_CROP(85px) */
+        height: calc(100% + 125px + 45px) !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: block !important;
+
+        border: 0 !important;
+        outline: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: #0f1115 !important;
+        appearance: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block orbs %}{% endblock %}
+
+{% block nav_explorer %}active{% endblock %}
+
+{% block content %}
+
+<main
+    class="
+        app-iframe-container
+        relative
+        isolate
+        overflow-hidden
+        bg-[#0f1115]
+    "
+>
+
+    <iframe
+        src="{{ streamlit_url.rstrip('/') }}/?embed=true&amp;embedded=true&amp;sso_token={{ streamlit_sso_token | urlencode }}"
+        class="app-iframe"
+        title="SmartQuery Analytics &amp; Data Explorer"
+        frameborder="0"
+        scrolling="no"
+        allow="fullscreen"
+    ></iframe>
+
+</main>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
