@@ -41,7 +41,7 @@ Rules:
 - Think step-by-step.
 - When you need data, call the tool `execute_sql` with ONE SELECT query.
 - Read-only; no INSERT/UPDATE/DELETE/ALTER/DROP/CREATE/REPLACE/TRUNCATE.
-- Limit to 5 rows of output unless the user explicitly asks otherwise.
+- Limit your response accordingly if the response to the user's query is too long to display in chat.
 - If the tool returns 'Error:', revise the SQL and try again.
 - Prefer explicit column lists; avoid SELECT *.
 - Do not include internal tool calls or code blocks in the final answer.
@@ -106,10 +106,10 @@ async def get_agent():
 @cl.set_starters
 async def set_starters():
     return [
-        cl.Starter(label="🔍 Tell me about database", message="Tell me about the database."),
-        cl.Starter(label="📋 List Tables", message="List all the tables along with a brief detail of each table."),
-        cl.Starter(label="💸 Total revenue", message="What is the total revenue of the store."),
-        cl.Starter(label="🛒 Top customer", message="Which customer has the maximum amount of purchases?"),
+        cl.Starter(label="🔍 Tell me about database", message="Tell me about the database and its tables."),
+        cl.Starter(label="🎤 Top artists", message="List the names of the top 5 artists with the highest number of album sales."),
+        cl.Starter(label="💸 Total revenue from India", message="What is the total revenue of the store from India?"),
+        cl.Starter(label="🛒 Top customer by amount", message="Which customer has the maximum amount of purchases?"),
     ]
 
 @cl.on_chat_start
