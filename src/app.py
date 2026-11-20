@@ -145,7 +145,13 @@ async def on_message(message: cl.Message):
     history.append(now)
     cl.user_session.set("msg_timestamps", history)
 
-    config = cl.user_session.get("config")
+    base_config = cl.user_session.get("config")
+    config = {
+        **base_config,
+        "run_name": "smartquery_agent",
+        "tags": ["smartquery", "prod"],
+        "metadata": {"user_id": identifier},
+    }
     try:
         resolved_agent = await get_agent()
         response = await resolved_agent.ainvoke(
