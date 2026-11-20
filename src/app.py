@@ -46,7 +46,10 @@ Rules:
 - Prefer explicit column lists; avoid SELECT *.
 - Do not include internal tool calls or code blocks in the final answer.
 - Always provide a polite, natural language response.
+- For broad questions like "tell me about the database", use at most 2 tool calls. Never sample every table; summarize and offer to explore specific tables.
 """
+
+System_Prompt = SYSTEM + "\n\nDatabase schema:\n" + chinook_db.get_table_info()
 
 # LLM Rate Limiter (0.5 req/sec = max 30 RPM to protect against Groq 429 errors)
 rate_limiter = InMemoryRateLimiter(
@@ -91,13 +94,13 @@ async def get_agent():
         agent = create_agent(
             model=model,
             tools=[execute_sql],
-            system_prompt=SYSTEM,
+            system_prompt=System_Prompt,
             checkpointer=checkpointer,
             middleware=[
                 SummarizationMiddleware(
                     model=summarization_model,
-                    trigger=("tokens", 500),
-                    keep=("messages", 1)
+                    trigger=("tokens", 4000),
+                    keep=("messages", 6),
                 )
             ],
         )
@@ -106,7 +109,7 @@ async def get_agent():
 @cl.set_starters
 async def set_starters():
     return [
-        cl.Starter(label="🔍 Tell me about database", message="Tell me about the database and its tables."),
+        cl.Starter(label="🔍 Tell me about database", message="Tell me about the database and list its tables."),
         cl.Starter(label="🎤 Top artists", message="List the names of the top 5 artists with the highest number of album sales."),
         cl.Starter(label="💸 Total revenue from India", message="What is the total revenue of the store from India?"),
         cl.Starter(label="🛒 Top customer by amount", message="Which customer has the maximum amount of purchases?"),
@@ -151,6 +154,7 @@ async def on_message(message: cl.Message):
         "run_name": "smartquery_agent",
         "tags": ["smartquery", "prod"],
         "metadata": {"user_id": identifier},
+        "recursion_limit": 30,
     }
     try:
         resolved_agent = await get_agent()
